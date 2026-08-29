@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>places.html · OS7-PLUS</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', 'Arial', system-ui, sans-serif;
+    }
+    body {
+      background: #1a1a2e;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .places-card {
+      max-width: 700px;
+      width: 100%;
+      background: rgba(230, 242, 255, 0.88);
+      backdrop-filter: blur(16px);
+      border-radius: 36px 36px 28px 28px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.15);
+      padding: 28px 30px 32px;
+      border: 1px solid rgba(255,255,255,0.3);
+      transition: 0.2s;
+    }
+    .places-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #3f6a9c;
+      padding-bottom: 14px;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+    }
+    .places-header h1 {
+      font-size: 2.2rem;
+      font-weight: 600;
+      color: #0a1f33;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .places-header h1 small {
+      font-size: 0.9rem;
+      font-weight: 400;
+      background: #1f3f64;
+      color: white;
+      padding: 0 16px;
+      border-radius: 60px;
+      letter-spacing: 0.3px;
+    }
+    .badge-os {
+      background: #28527a;
+      color: #e5f0ff;
+      padding: 6px 18px;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      box-shadow: inset 0 -2px 0 #0b1f33;
+    }
+    .place-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      margin: 22px 0 18px;
+    }
+    .place-item {
+      background: rgba(255, 255, 255, 0.5);
+      backdrop-filter: blur(4px);
+      border-radius: 60px;
+      padding: 14px 22px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      border: 1px solid rgba(255,255,255,0.6);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: 0.15s;
+      cursor: default;
+    }
+    .place-item:hover {
+      background: rgba(255, 255, 255, 0.8);
+      transform: scale(1.01);
+      border-color: #7fa3cc;
+    }
+    .place-icon {
+      font-size: 2.6rem;
+      width: 60px;
+      text-align: center;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+    }
+    .place-info {
+      flex: 1;
+    }
+    .place-info h3 {
+      font-size: 1.3rem;
+      color: #0d263f;
+      font-weight: 600;
+    }
+    .place-info p {
+      color: #1f4068;
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+    .place-tag {
+      background: #1f3f64;
+      color: white;
+      padding: 4px 14px;
+      border-radius: 60px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+    }
+    .place-tag.free {
+      background: #2d6a4f;
+    }
+    .place-tag.dome {
+      background: #7d4b3a;
+    }
+    .place-tag.go {
+      background: #a1523a;
+    }
+    .action-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 28px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(60, 100, 150, 0.3);
+    }
+    .go-btn {
+      background: linear-gradient(145deg, #2d4a7a, #1b2f55);
+      border: none;
+      border-radius: 60px;
+      padding: 12px 32px;
+      color: #f0f9ff;
+      font-weight: 700;
+      font-size: 1.1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 6px 0 #0f1a2e, 0 8px 20px rgba(0,0,0,0.3);
+      cursor: pointer;
+      transition: 0.06s linear;
+      border: 1px solid #5b7fb0;
+    }
+    .go-btn:active {
+      transform: translateY(6px);
+      box-shadow: 0 2px 0 #0f1a2e;
+    }
+    .go-btn span {
+      font-size: 1.6rem;
+    }
+    .home-link {
+      color: #1b3d66;
+      text-decoration: none;
+      font-weight: 600;
+      border-bottom: 2px dotted #3f6a9c;
+      padding-bottom: 2px;
+    }
+    .home-link:hover {
+      color: #05213b;
+      border-bottom: 2px solid #1f3f64;
+    }
+    .footer-note {
+      margin-top: 18px;
+      font-size: 0.7rem;
+      color: #345a82;
+      text-align: center;
+      opacity: 0.6;
+      letter-spacing: 1px;
+    }
+    @media (max-width: 500px) {
+      .places-card { padding: 20px; }
+      .place-item { flex-wrap: wrap; }
+      .place-tag { margin-left: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="places-card">
+    <div class="places-header">
+      <h1>
+        📍 places.html
+        <small>OS7-PLUS</small>
+      </h1>
+      <span class="badge-os">🪟 Windows 7 · free</span>
+    </div>
+
+    <!-- Список мест / places -->
+    <div class="place-grid">
+      <div class="place-item">
+        <div class="place-icon">🏛️</div>
+        <div class="place-info">
+          <h3>Downtown · dome</h3>
+          <p>Центральный район, доступ к dome и free zone</p>
+        </div>
+        <span class="place-tag dome">dome</span>
+        <span class="place-tag free">free</span>
+      </div>
+
+      <div class="place-item">
+        <div class="place-icon">🌲</div>
+        <div class="place-info">
+          <h3>Free Park · go</h3>
+          <p>Открытое пространство для go go go</p>
+        </div>
+        <span class="place-tag free">free</span>
+        <span class="place-tag go">go</span>
+      </div>
+
+      <div class="place-item">
+        <div class="place-icon">🖥️</div>
+        <div class="place-info">
+          <h3>index.html (root)</h3>
+          <p>Главная страница · homeframe</p>
+        </div>
+        <span class="place-tag">home</span>
+        <span class="place-tag free">free</span>
+      </div>
+
+      <div class="place-item">
+        <div class="place-icon">🚀</div>
+        <div class="place-info">
+          <h3>Launchpad · go go</h3>
+          <p>Стартовая панель для быстрого доступа</p>
+        </div>
+        <span class="place-tag go">go</span>
+        <span class="place-tag dome">dome</span>
+      </div>
+
+      <div class="place-item">
+        <div class="place-icon">⭐</div>
+        <div class="place-info">
+          <h3>Star dome · 7</h3>
+          <p>Звёздный купол · Windows 7 edition</p>
+        </div>
+        <span class="place-tag dome">dome</span>
+        <span class="place-tag free">free</span>
+      </div>
+    </div>
+
+    <!-- action row: go + homeframe -->
+    <div class="action-row">
+      <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+        <button class="go-btn" id="goDomeBtn">
+          <span>🌐</span> GO · DOME
+        </button>
+        <button class="go-btn" style="background: linear-gradient(145deg, #3c6b4a, #1f4030); box-shadow:0 6px 0 #13281c;" id="goFreeBtn">
+          <span>✨</span> FREE · GO
+        </button>
+      </div>
+      <div style="display: flex; align-items: center; gap: 16px; margin-top: 8px;">
+        <a href="#" class="home-link" id="homeframeLink">🏠 homeframe.html</a>
+        <span style="color: #1f3f64;">|</span>
+        <span style="color: #1f3f64; font-weight: 500;">places.html</span>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      🧭 free dome · go go go go go go go · windows 7
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // Кнопки "GO" показывают информацию о местах
+      document.getElementById('goDomeBtn').addEventListener('click', function() {
+        alert('🌐 DOME · доступны места:\n- Downtown dome\n- Star dome 7\n- Launchpad go go');
+      });
+
+      document.getElementById('goFreeBtn').addEventListener('click', function() {
+        alert('✨ FREE · GO!\nСвободная зона: Free Park, homeframe, index.html');
+      });
+
+      // Ссылка homeframe.html
+      document.getElementById('homeframeLink').addEventListener('click', function(e) {
+        e.preventDefault();
+        alert('🏠 Переход на homeframe.html (симуляция)\nЗдесь могла бы быть ваша главная страница.');
+      });
+
+      // Клик по элементам списка – дополнительный фидбек
+      const placeItems = document.querySelectorAll('.place-item');
+      placeItems.forEach((item, index) => {
+        item.addEventListener('click', function() {
+          const title = this.querySelector('h3')?.innerText || 'место';
+          alert(`📍 ${title}\nДоступно: free · dome · go`);
+        });
+      });
+
+      console.log('places.html · OS7-PLUS · ready');
+    })();
+  </script>
+</body>
+</html>
