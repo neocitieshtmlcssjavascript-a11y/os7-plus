@@ -1,1 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OS7-PLUS · Windows 7 free home</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Arial', system-ui, sans-serif;
+            user-select: none;
+        }
+        body {
+            background: #1a1a2e;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+        /* main frame – windows 7 glass style */
+        .os7-frame {
+            width: 100%;
+            max-width: 1300px;
+            height: 92vh;
+            max-height: 900px;
+            background: radial-gradient(ellipse at 20% 30%, #3a4b6b, #1f2a3f 80%);
+            border-radius: 28px 28px 16px 16px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.7), inset 0 1px 4px rgba(255,255,255,0.15);
+            padding: 12px 12px 8px 12px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            backdrop-filter: blur(2px);
+            transition: all 0.2s;
+        }
+        /* glass taskbar + aero feel */
+        .taskbar {
+            background: rgba(30, 40, 60, 0.65);
+            backdrop-filter: blur(12px);
+            border-radius: 40px 40px 20px 20px;
+            padding: 6px 18px 6px 14px;
+            margin-top: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 -2px 12px rgba(0,0,0,0.5);
+            min-height: 60px;
+            flex-wrap: wrap;
+        }
+        .start-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .start-btn {
+            background: linear-gradient(145deg, #2d4a7a, #1b2f55);
+            border: none;
+            border-radius: 40px;
+            padding: 8px 22px 8px 18px;
+            color: #f0f9ff;
+            font-weight: 600;
+            font-size: 1.1rem;
+            letter-spacing: 0.3px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 0 #0f1a2e, 0 6px 12px rgba(0,0,0,0.4);
+            cursor: pointer;
+            transition: 0.07s linear;
+            border: 1px solid #5b7fb0;
+        }
+        .start-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #0f1a2e;
+        }
+        .start-btn span {
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+        .clock-area {
+            color: #dce9ff;
+            background: rgba(0, 10, 25, 0.4);
+            padding: 6px 24px;
+            border-radius: 60px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.06);
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.4);
+            letter-spacing: 1px;
+        }
+        /* desktop icons + window area */
+        .desktop-area {
+            flex: 1;
+            display: flex;
+            flex-wrap: wrap;
+            align-content: flex-start;
+            gap: 16px 24px;
+            padding: 16px 18px 12px 18px;
+            position: relative;
+        }
+        /* windows style (draggable) */
+        .window {
+            background: rgba(240, 248, 255, 0.85);
+            backdrop-filter: blur(16px);
+            border-radius: 20px 20px 16px 16px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.1);
+            min-width: 240px;
+            width: 300px;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(255,255,255,0.25);
+            position: absolute;
+            top: 50px;
+            left: 60px;
+            transition: box-shadow 0.15s;
+            cursor: grab;
+        }
+        .window:active {
+            cursor: grabbing;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+        }
+        .window-header {
+            background: linear-gradient(90deg, #21416b, #385b8a);
+            padding: 12px 16px;
+            border-radius: 20px 20px 0 0;
+            color: white;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #88b0e0;
+            cursor: grab;
+        }
+        .window-header:active {
+            cursor: grabbing;
+        }
+        .window-header .win-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .window-controls {
+            display: flex;
+            gap: 8px;
+        }
+        .window-controls span {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #1d2f4a;
+            color: #bfd9ff;
+            text-align: center;
+            line-height: 18px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.1s;
+            box-shadow: inset -1px -1px 3px rgba(0,0,0,0.4);
+        }
+        .window-controls .close-btn { background: #b13e3e; color: white; }
+        .window-controls .close-btn:hover { background: #d44; }
+        .window-content {
+            padding: 18px 16px 20px;
+            flex: 1;
+            color: #122a44;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(4px);
+            border-radius: 0 0 16px 16px;
+            min-height: 120px;
+        }
+        .window-content h3 {
+            margin-top: 0;
+            color: #0b1f36;
+            border-bottom: 1px solid #8aa9d0;
+            padding-bottom: 6px;
+        }
+        .window-content ul {
+            padding-left: 22px;
+            margin: 10px 0;
+        }
+        .window-content li {
+            margin: 6px 0;
+        }
+        .icon-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+        .desktop-icon {
+            width: 80px;
+            text-align: center;
+            color: #eef7ff;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+            cursor: pointer;
+            transition: 0.1s;
+            padding: 6px 4px;
+            border-radius: 12px;
+            background: rgba(0,0,0,0.1);
+            backdrop-filter: blur(2px);
+        }
+        .desktop-icon:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.02);
+        }
+        .desktop-icon .icon-img {
+            font-size: 3.2rem;
+            filter: drop-shadow(0 6px 8px rgba(0,0,0,0.6));
+        }
+        .desktop-icon span {
+            display: block;
+            font-size: 0.8rem;
+            background: rgba(10, 20, 40, 0.5);
+            padding: 2px 8px;
+            border-radius: 30px;
+            margin-top: 4px;
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        /* places.html & homeframe.html indicators */
+        .badge {
+            background: #3f6a9c;
+            color: white;
+            padding: 2px 12px;
+            border-radius: 60px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+        .footer-note {
+            color: #a0bcdd;
+            font-size: 0.7rem;
+            opacity: 0.7;
+            text-align: center;
+            padding: 6px 0 0;
+            letter-spacing: 1px;
+        }
+        /* responsive */
+        @media (max-width: 700px) {
+            .window { width: 260px; left: 20px; top: 30px; }
+        }
+        @media (max-width: 500px) {
+            .taskbar { flex-direction: column; align-items: stretch; gap: 8px; }
+            .start-area { justify-content: space-between; }
+            .clock-area { align-self: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="os7-frame" id="os7Frame">
+        <!-- desktop with icons and windows -->
+        <div class="desktop-area" id="desktopArea">
+            <!-- free desktop icons : homeframe, places, dome -->
+            <div class="desktop-icon" data-target="homeframe">
+                <div class="icon-img">🏠</div>
+                <span>homeframe.html</span>
+            </div>
+            <div class="desktop-icon" data-target="places">
+                <div class="icon-img">📍</div>
+                <span>places.html</span>
+            </div>
+            <div class="desktop-icon" data-target="dome">
+                <div class="icon-img">🌐</div>
+                <span>dome · go</span>
+            </div>
+            <div class="desktop-icon" data-target="free">
+                <div class="icon-img">✨</div>
+                <span>free dome</span>
+            </div>
+            <!-- extra go go go -->
+            <div class="desktop-icon" style="opacity:0.8;">
+                <div class="icon-img">🚀</div>
+                <span>go go go</span>
+            </div>
+            <div class="desktop-icon" style="opacity:0.6;">
+                <div class="icon-img">⭐</div>
+                <span>go · 7</span>
+            </div>
 
+            <!-- draggable window : homeframe / places (as example) -->
+            <div class="window" id="homeWindow" style="top: 20px; left: 30px; width: 280px;">
+                <div class="window-header">
+                    <span class="win-title">📄 homeframe.html</span>
+                    <div class="window-controls">
+                        <span class="close-btn" onclick="closeWindow('homeWindow')">✕</span>
+                    </div>
+                </div>
+                <div class="window-content">
+                    <h3>🏡 homeframe</h3>
+                    <p><strong>Windows 7 · free</strong> <span class="badge">OS7-PLUS</span></p>
+                    <ul>
+                        <li>✓ index.html · places.html</li>
+                        <li>✓ free dome · go go</li>
+                        <li>🪟 drag me anywhere</li>
+                    </ul>
+                    <p style="font-size:0.8rem; margin-top: 12px; background: #d9e6f5; padding: 4px 8px; border-radius: 30px;">✨ homeframe ready</p>
+                </div>
+            </div>
+
+            <!-- second window: places.html -->
+            <div class="window" id="placesWindow" style="top: 160px; left: 360px; width: 260px;">
+                <div class="window-header">
+                    <span class="win-title">🗺️ places.html</span>
+                    <div class="window-controls">
+                        <span class="close-btn" onclick="closeWindow('placesWindow')">✕</span>
+                    </div>
+                </div>
+                <div class="window-content">
+                    <h3>📍 places</h3>
+                    <ul>
+                        <li>🏛️ downtown · dome</li>
+                        <li>🌲 free park · go</li>
+                        <li>🖥️ index.html (root)</li>
+                    </ul>
+                    <div style="display: flex; gap: 6px; flex-wrap: wrap; margin: 10px 0;">
+                        <span class="badge">free</span>
+                        <span class="badge">go</span>
+                        <span class="badge">dome</span>
+                    </div>
+                    <p style="border-top: 1px solid #a0b8d0; padding-top: 6px;">🚀 go go go · 7</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- taskbar -->
+        <div class="taskbar">
+            <div class="start-area">
+                <button class="start-btn" id="startButton">
+                    <span>🪟</span> START · OS7
+                </button>
+                <div style="display: flex; gap: 6px; align-items: center;">
+                    <span style="color: #b8d4ff; background: rgba(0,0,0,0.2); padding: 4px 12px; border-radius: 30px; font-size:0.8rem;">free</span>
+                    <span style="color: #b8d4ff; background: rgba(0,0,0,0.2); padding: 4px 12px; border-radius: 30px; font-size:0.8rem;">dome</span>
+                </div>
+            </div>
+            <div class="clock-area" id="clockDisplay">
+                🕒 00:00:00
+            </div>
+        </div>
+        <div class="footer-note">
+            windows 7 · homeframe · places · free dome · go go go go go go go
+        </div>
+    </div>
+    <script>
+        (function(){
+            // draggable windows
+            const windows = document.querySelectorAll('.window');
+            let activeWindow = null;
+            let offsetX, offsetY;
+
+            windows.forEach(win => {
+                const header = win.querySelector('.window-header');
+                if (!header) return;
+                header.addEventListener('mousedown', (e) => {
+                    if (e.target.closest('.window-controls')) return; // ignore close btn
+                    activeWindow = win;
+                    const rect = win.getBoundingClientRect();
+                    offsetX = e.clientX - rect.left;
+                    offsetY = e.clientY - rect.top;
+                    win.style.cursor = 'grabbing';
+                    win.style.zIndex = 10;
+                });
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!activeWindow) return;
+                const parentRect = activeWindow.parentElement.getBoundingClientRect();
+                let newLeft = e.clientX - parentRect.left - offsetX;
+                let newTop = e.clientY - parentRect.top - offsetY;
+                // clamp to desktop area
+                const maxX = parentRect.width - activeWindow.offsetWidth - 10;
+                const maxY = parentRect.height - activeWindow.offsetHeight - 10;
+                newLeft = Math.min(Math.max(newLeft, 0), maxX);
+                newTop = Math.min(Math.max(newTop, 0), maxY);
+                activeWindow.style.left = newLeft + 'px';
+                activeWindow.style.top = newTop + 'px';
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (activeWindow) {
+                    activeWindow.style.cursor = 'grab';
+                    activeWindow.style.zIndex = 1;
+                    activeWindow = null;
+                }
+            });
+
+            // close window function
+            window.closeWindow = function(id) {
+                const win = document.getElementById(id);
+                if (win) {
+                    win.style.display = 'none';
+                }
+            };
+
+            // reopen windows via desktop icons (simple toggle)
+            const icons = document.querySelectorAll('.desktop-icon');
+            icons.forEach(icon => {
+                icon.addEventListener('dblclick', function(e) {
+                    const target = this.dataset.target;
+                    if (target === 'homeframe') {
+                        const win = document.getElementById('homeWindow');
+                        if (win) {
+                            win.style.display = 'flex';
+                            win.style.top = (20 + Math.random()*40) + 'px';
+                            win.style.left = (30 + Math.random()*60) + 'px';
+                        }
+                    } else if (target === 'places') {
+                        const win = document.getElementById('placesWindow');
+                        if (win) {
+                            win.style.display = 'flex';
+                            win.style.top = (160 + Math.random()*30) + 'px';
+                            win.style.left = (360 + Math.random()*40) + 'px';
+                        }
+                    } else if (target === 'dome' || target === 'free') {
+                        alert('🌐 dome · free go go go!\n(places & homeframe are active)');
+                    } else {
+                        alert('🚀 go go go · OS7-PLUS');
+                    }
+                });
+                // single click hint
+                icon.addEventListener('click', function() {
+                    // subtle feedback
+                });
+            });
+
+            // START button: show info
+            document.getElementById('startButton').addEventListener('click', function() {
+                alert('🪟 OS7-PLUS · Windows 7 free home\n\n📁 homeframe.html\n📁 places.html\n🌐 free dome\n🏁 go go go go go go go');
+            });
+
+            // clock
+            function updateClock() {
+                const now = new Date();
+                let h = String(now.getHours()).padStart(2, '0');
+                let m = String(now.getMinutes()).padStart(2, '0');
+                let s = String(now.getSeconds()).padStart(2, '0');
+                document.getElementById('clockDisplay').innerHTML = `🕒 ${h}:${m}:${s}`;
+            }
+            updateClock();
+            setInterval(updateClock, 1000);
+
+            // make windows draggable from header (already set)
+            // additional: reopen windows if closed via start
+            console.log('OS7-PLUS · homeframe · places · free dome · go');
+        })();
+    </script>
+</body>
+</html>
