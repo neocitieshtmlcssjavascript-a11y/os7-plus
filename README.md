@@ -1,3 +1,4 @@
+(logo.png)
 About
 OS7 Plus! is a remake of my MD submission OS7 in MD.  Play as Subject 7, an unnamed quality assurance tester for the latest and greatest computer operating system, Optimal-System 7! However, things may not be as they seem once you break free from the monotonous quality assurance chamber.
 
